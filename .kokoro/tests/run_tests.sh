@@ -159,15 +159,15 @@ for file in **/pom.xml; do
     fi
 
     # Skip tests with the kokoro.skipTests property defined in pom.xml
-    SKIP_TESTS=$(mvn -q -DforceStdout help:evaluate -Dexpression=kokoro.skipTests || grep -i true)
-    if [[ -z $? ]]; then
+    SKIP_TESTS=$(mvn -q -DforceStdout help:evaluate -Dexpression=kokoro.skipTests | grep -i true)
+    if [[ $? -eq 0 ]]; then
         echo -e "\n Skipping tests: kokoro.skipTests set to 'true' in pom.xml\n"
         continue
     fi
 
     # Run an install-only Maven job if the kokoro.preinstallMavenDependencies property is true in pom.xml
-    SKIP_TESTS=$(mvn -q -DforceStdout help:evaluate -Dexpression=kokoro.preinstallMavenDependencies || grep -i true)
-    if [[ -z $? ]]; then
+    SKIP_TESTS=$(mvn -q -DforceStdout help:evaluate -Dexpression=kokoro.preinstallMavenDependencies | grep -i true)
+    if [[ $? -eq 0 ]]; then
         echo -e "\n Preinstalling Maven dependencies...\n"
         mvn -q -batch-mode --fail-never clean verify \
           -DskipTests \
