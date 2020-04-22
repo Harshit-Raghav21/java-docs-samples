@@ -70,7 +70,7 @@ public class ExampleIntegrationTest {
     // Use resilience4j to retry the test HTTP request until the plugin responds
     RetryRegistry registry = RetryRegistry.of(RetryConfig.custom()
         .maxAttempts(15)
-        .intervalFunction(IntervalFunction.ofExponentialBackoff(100))
+        .intervalFunction(IntervalFunction.ofExponentialBackoff(200, 2))
         .retryExceptions(IOException.class)
         .build());
     Retry retry = registry.retry("my");
