@@ -70,6 +70,7 @@ public class ExampleIntegrationTest {
     b.write(
         emulatorProcess.getInputStream().readNBytes(emulatorProcess.getInputStream().available()));
     String c = a.toString(StandardCharsets.UTF_8) + b.toString(StandardCharsets.UTF_8);
+    c += "%nPROCESS DIR: " + (new ProcessBuilder()).directory().getAbsolutePath();
 
     // Terminate the running Functions Framework Maven plugin process
     emulatorProcess.destroy();
