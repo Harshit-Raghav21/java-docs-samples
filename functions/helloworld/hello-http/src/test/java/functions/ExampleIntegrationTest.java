@@ -26,6 +26,7 @@ import io.github.resilience4j.retry.RetryConfig;
 import io.github.resilience4j.retry.RetryRegistry;
 import io.vavr.CheckedFunction0;
 import io.vavr.control.Try;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -33,6 +34,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.Logger;
+import javassist.bytecode.ByteArray;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -55,7 +57,12 @@ public class ExampleIntegrationTest {
   }
 
   @AfterClass
-  public static void tearDown() {
+  public static void tearDown() throws IOException {
+    // DEBUG: Print stdout/stderr
+    ByteArrayOutputStream a = new ByteArrayOutputStream();
+    a.write(
+        emulatorProcess.getErrorStream().readNBytes(emulatorProcess.getInputStream().available()))
+
     // Terminate the running Functions Framework Maven plugin process
     emulatorProcess.destroy();
   }
@@ -69,7 +76,7 @@ public class ExampleIntegrationTest {
     // The Functions Framework Maven plugin process takes time to start up
     // Use resilience4j to retry the test HTTP request until the plugin responds
     RetryRegistry registry = RetryRegistry.of(RetryConfig.custom()
-        .maxAttempts(15)
+        .maxAttempts(10)
         .intervalFunction(IntervalFunction.ofExponentialBackoff(200, 2))
         .retryExceptions(IOException.class)
         .build());
