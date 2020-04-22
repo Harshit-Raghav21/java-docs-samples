@@ -69,7 +69,7 @@ public class ExampleIntegrationTest {
     // The Functions Framework Maven plugin process takes time to start up
     // Use resilience4j to retry the test HTTP request until the plugin responds
     RetryRegistry registry = RetryRegistry.of(RetryConfig.custom()
-        .maxAttempts(10)
+        .maxAttempts(15)
         .intervalFunction(IntervalFunction.ofExponentialBackoff(100))
         .retryExceptions(IOException.class)
         .build());
