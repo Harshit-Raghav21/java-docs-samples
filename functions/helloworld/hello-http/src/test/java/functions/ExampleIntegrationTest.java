@@ -45,7 +45,7 @@ import org.junit.runners.JUnit4;
 public class ExampleIntegrationTest {
   // Root URL pointing to the locally hosted function
   // The Functions Framework Maven plugin lets us run a function locally
-  private static final String BASE_URL = "http://localhost:8081";
+  private static final String BASE_URL = "http://localhost:8080";
 
   private static Process emulatorProcess = null;
   private static HttpClient client = HttpClient.newHttpClient();
@@ -70,10 +70,12 @@ public class ExampleIntegrationTest {
     b.write(
         emulatorProcess.getInputStream().readNBytes(emulatorProcess.getInputStream().available()));
     String c = a.toString(StandardCharsets.UTF_8) + b.toString(StandardCharsets.UTF_8);
-    throw new RuntimeException(c);
 
     // Terminate the running Functions Framework Maven plugin process
     emulatorProcess.destroy();
+
+    // DEBUG
+    throw new RuntimeException(c);
   }
 
   @Test
@@ -85,8 +87,8 @@ public class ExampleIntegrationTest {
     // The Functions Framework Maven plugin process takes time to start up
     // Use resilience4j to retry the test HTTP request until the plugin responds
     RetryRegistry registry = RetryRegistry.of(RetryConfig.custom()
-        .maxAttempts(2)
-        .intervalFunction(IntervalFunction.ofExponentialBackoff(10, 2))
+        .maxAttempts(8)
+        .intervalFunction(IntervalFunction.ofExponentialBackoff(200, 2))
         .retryExceptions(IOException.class)
         .build());
     Retry retry = registry.retry("my");
