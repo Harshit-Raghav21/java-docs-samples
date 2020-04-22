@@ -59,10 +59,18 @@ public class ExampleIntegrationTest {
   @AfterClass
   public static void tearDown() throws IOException {
     // DEBUG: Print stdout/stderr
+    System.out.println("--- OUT ---");
     ByteArrayOutputStream a = new ByteArrayOutputStream();
     a.write(
         emulatorProcess.getErrorStream().readNBytes(emulatorProcess.getErrorStream().available()));
     System.out.println(a.toString(StandardCharsets.UTF_8));
+
+    // DEBUG: Print stdout/stderr
+    System.out.println("--- ERR ---");
+    ByteArrayOutputStream b = new ByteArrayOutputStream();
+    a.write(
+        emulatorProcess.getInputStream().readNBytes(emulatorProcess.getInputStream().available()));
+    System.out.println(b.toString(StandardCharsets.UTF_8));
 
     // Terminate the running Functions Framework Maven plugin process
     emulatorProcess.destroy();
@@ -77,8 +85,8 @@ public class ExampleIntegrationTest {
     // The Functions Framework Maven plugin process takes time to start up
     // Use resilience4j to retry the test HTTP request until the plugin responds
     RetryRegistry registry = RetryRegistry.of(RetryConfig.custom()
-        .maxAttempts(8)
-        .intervalFunction(IntervalFunction.ofExponentialBackoff(200, 2))
+        .maxAttempts(2)
+        .intervalFunction(IntervalFunction.ofExponentialBackoff(10, 2))
         .retryExceptions(IOException.class)
         .build());
     Retry retry = registry.retry("my");
