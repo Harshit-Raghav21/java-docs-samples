@@ -61,7 +61,8 @@ public class ExampleIntegrationTest {
     // DEBUG: Print stdout/stderr
     ByteArrayOutputStream a = new ByteArrayOutputStream();
     a.write(
-        emulatorProcess.getErrorStream().readNBytes(emulatorProcess.getInputStream().available()))
+        emulatorProcess.getErrorStream().readNBytes(emulatorProcess.getInputStream().available()));
+    System.out.println(a.toString(StandardCharsets.UTF_8));
 
     // Terminate the running Functions Framework Maven plugin process
     emulatorProcess.destroy();
