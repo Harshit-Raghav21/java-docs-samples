@@ -27,6 +27,7 @@ import io.github.resilience4j.retry.RetryRegistry;
 import io.vavr.CheckedFunction0;
 import io.vavr.control.Try;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -52,8 +53,17 @@ public class ExampleIntegrationTest {
 
   @BeforeClass
   public static void setUp() throws IOException {
+    // Get the sample's base directory (the one containing a pom.xml file)
+    String baseDir = System.getProperty("user.dir");
+    if (baseDir == null) {
+      baseDir = System.getProperty("baseDir");
+    }
+
     // Emulate the function locally by running the Functions Framework Maven plugin
-    emulatorProcess = (new ProcessBuilder()).command("mvn", "-nsu", "function:run").start();
+    emulatorProcess = new ProcessBuilder()
+        .command("mvn", "-nsu", "function:run")
+        .directory(new File(baseDir))
+        .start();
   }
 
   @AfterClass
@@ -70,11 +80,6 @@ public class ExampleIntegrationTest {
     b.write(
         emulatorProcess.getInputStream().readNBytes(emulatorProcess.getInputStream().available()));
     String c = a.toString(StandardCharsets.UTF_8) + b.toString(StandardCharsets.UTF_8);
-
-
-    for (String p : System.getProperties().stringPropertyNames()) {
-      c += "  " + p + ": " + System.getProperty(p);
-    }
 
     // Terminate the running Functions Framework Maven plugin process
     emulatorProcess.destroy();
