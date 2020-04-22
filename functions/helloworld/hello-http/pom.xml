@@ -35,6 +35,7 @@
     <maven.compiler.target>11</maven.compiler.target>
     <maven.compiler.source>11</maven.compiler.source>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <kokoro.preinstallMavenDependencies>true</kokoro.preinstallMavenDependencies>
   </properties>
 
   <dependencies>
