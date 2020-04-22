@@ -24,11 +24,14 @@ import io.github.resilience4j.core.IntervalFunction;
 import io.github.resilience4j.retry.Retry;
 import io.github.resilience4j.retry.RetryConfig;
 import io.github.resilience4j.retry.RetryRegistry;
+import io.vavr.CheckedFunction0;
+import io.vavr.control.Try;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Logger;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -61,19 +64,25 @@ public class ExampleIntegrationTest {
   public void helloHttp_shouldRunWithFunctionsFramework() throws Throwable {
     String functionUrl = BASE_URL + "/helloHttp";
 
-    java.net.http.HttpRequest getRequest =
-        java.net.http.HttpRequest.newBuilder().uri(URI.create(functionUrl)).GET().build();
+    HttpRequest getRequest = HttpRequest.newBuilder().uri(URI.create(functionUrl)).GET().build();
 
+    // The Functions Framework Maven plugin process takes time to start up
+    // Use resilience4j to retry the test HTTP request until the plugin responds
     RetryRegistry registry = RetryRegistry.of(RetryConfig.custom()
         .maxAttempts(10)
         .intervalFunction(IntervalFunction.ofExponentialBackoff(100))
         .retryExceptions(IOException.class)
         .build());
     Retry retry = registry.retry("my");
-    String body = Retry.decorateCheckedFunction(retry, (HttpRequest r) -> {
-      return client.send(r, HttpResponse.BodyHandlers.ofString()).body();
-    }).apply(getRequest);
 
+    // Perform the request-retry process
+    CheckedFunction0<String> retriableFunc = Retry.decorateCheckedSupplier(retry, () -> {
+      return client.send(getRequest,
+          HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8)).body();
+    });
+    String body = Try.of(retriableFunc).get();
+
+    // Verify the function returned the right results
     assertThat(body).isEqualTo("Hello world!");
   }
 }
