@@ -59,18 +59,18 @@ public class ExampleIntegrationTest {
   @AfterClass
   public static void tearDown() throws IOException {
     // DEBUG: Print stdout/stderr
-    System.err.println("--- OUT ---");
+    Logger.getAnonymousLogger().severe("--- OUT ---");
     ByteArrayOutputStream a = new ByteArrayOutputStream();
     a.write(
         emulatorProcess.getErrorStream().readNBytes(emulatorProcess.getErrorStream().available()));
-    System.err.println(a.toString(StandardCharsets.UTF_8));
+    Logger.getAnonymousLogger().severe(a.toString(StandardCharsets.UTF_8));
 
     // DEBUG: Print stdout/stderr
-    System.err.println("--- ERR ---");
+    Logger.getAnonymousLogger().severe("--- ERR ---");
     ByteArrayOutputStream b = new ByteArrayOutputStream();
-    a.write(
+    b.write(
         emulatorProcess.getInputStream().readNBytes(emulatorProcess.getInputStream().available()));
-    System.err.println(b.toString(StandardCharsets.UTF_8));
+    Logger.getAnonymousLogger().severe(b.toString(StandardCharsets.UTF_8));
 
     // Terminate the running Functions Framework Maven plugin process
     emulatorProcess.destroy();
