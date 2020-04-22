@@ -53,7 +53,7 @@ public class ExampleIntegrationTest {
   @BeforeClass
   public static void setUp() throws IOException {
     // Emulate the function locally by running the Functions Framework Maven plugin
-    emulatorProcess = (new ProcessBuilder()).command("mvn", "function:run").start();
+    emulatorProcess = (new ProcessBuilder()).command("mvn", "-nsu", "function:run").start();
   }
 
   @AfterClass
@@ -70,7 +70,7 @@ public class ExampleIntegrationTest {
     b.write(
         emulatorProcess.getInputStream().readNBytes(emulatorProcess.getInputStream().available()));
     String c = a.toString(StandardCharsets.UTF_8) + b.toString(StandardCharsets.UTF_8);
-    c += "%nPROCESS DIR: " + (new ProcessBuilder()).directory().getAbsolutePath();
+    c += "%nPROCESS DIR: " + System.getProperty("user.dir");
 
     // Terminate the running Functions Framework Maven plugin process
     emulatorProcess.destroy();
