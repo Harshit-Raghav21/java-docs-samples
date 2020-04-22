@@ -61,7 +61,7 @@ public class ExampleIntegrationTest {
     // DEBUG: Print stdout/stderr
     ByteArrayOutputStream a = new ByteArrayOutputStream();
     a.write(
-        emulatorProcess.getErrorStream().readNBytes(emulatorProcess.getInputStream().available()));
+        emulatorProcess.getErrorStream().readNBytes(emulatorProcess.getErrorStream().available()));
     System.out.println(a.toString(StandardCharsets.UTF_8));
 
     // Terminate the running Functions Framework Maven plugin process
@@ -77,7 +77,7 @@ public class ExampleIntegrationTest {
     // The Functions Framework Maven plugin process takes time to start up
     // Use resilience4j to retry the test HTTP request until the plugin responds
     RetryRegistry registry = RetryRegistry.of(RetryConfig.custom()
-        .maxAttempts(5)
+        .maxAttempts(8)
         .intervalFunction(IntervalFunction.ofExponentialBackoff(200, 2))
         .retryExceptions(IOException.class)
         .build());
