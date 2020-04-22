@@ -45,7 +45,7 @@ import org.junit.runners.JUnit4;
 public class ExampleIntegrationTest {
   // Root URL pointing to the locally hosted function
   // The Functions Framework Maven plugin lets us run a function locally
-  private static final String BASE_URL = "http://localhost:8080";
+  private static final String BASE_URL = "http://localhost:8081";
 
   private static Process emulatorProcess = null;
   private static HttpClient client = HttpClient.newHttpClient();
@@ -59,18 +59,18 @@ public class ExampleIntegrationTest {
   @AfterClass
   public static void tearDown() throws IOException {
     // DEBUG: Print stdout/stderr
-    System.out.println("--- OUT ---");
+    System.err.println("--- OUT ---");
     ByteArrayOutputStream a = new ByteArrayOutputStream();
     a.write(
         emulatorProcess.getErrorStream().readNBytes(emulatorProcess.getErrorStream().available()));
-    System.out.println(a.toString(StandardCharsets.UTF_8));
+    System.err.println(a.toString(StandardCharsets.UTF_8));
 
     // DEBUG: Print stdout/stderr
-    System.out.println("--- ERR ---");
+    System.err.println("--- ERR ---");
     ByteArrayOutputStream b = new ByteArrayOutputStream();
     a.write(
         emulatorProcess.getInputStream().readNBytes(emulatorProcess.getInputStream().available()));
-    System.out.println(b.toString(StandardCharsets.UTF_8));
+    System.err.println(b.toString(StandardCharsets.UTF_8));
 
     // Terminate the running Functions Framework Maven plugin process
     emulatorProcess.destroy();
