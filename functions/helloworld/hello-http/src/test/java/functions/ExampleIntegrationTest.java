@@ -63,14 +63,14 @@ public class ExampleIntegrationTest {
     ByteArrayOutputStream a = new ByteArrayOutputStream();
     a.write(
         emulatorProcess.getErrorStream().readNBytes(emulatorProcess.getErrorStream().available()));
-    Logger.getAnonymousLogger().severe(a.toString(StandardCharsets.UTF_8));
 
     // DEBUG: Print stdout/stderr
     Logger.getAnonymousLogger().severe("--- ERR ---");
     ByteArrayOutputStream b = new ByteArrayOutputStream();
     b.write(
         emulatorProcess.getInputStream().readNBytes(emulatorProcess.getInputStream().available()));
-    Logger.getAnonymousLogger().severe(b.toString(StandardCharsets.UTF_8));
+    String c = a.toString(StandardCharsets.UTF_8) + b.toString(StandardCharsets.UTF_8);
+    throw new RuntimeException(c);
 
     // Terminate the running Functions Framework Maven plugin process
     emulatorProcess.destroy();
