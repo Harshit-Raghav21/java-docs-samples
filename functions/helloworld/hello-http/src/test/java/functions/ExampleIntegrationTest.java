@@ -85,6 +85,12 @@ public class ExampleIntegrationTest {
     emulatorProcess.destroy();
 
     // DEBUG
+    String baseDir = System.getProperty("baseDir");
+    if (baseDir == null) {
+      c += "%n[BASE DIR used user.dir]%n";
+      baseDir = System.getProperty("user.dir");
+    }
+    c += "%nBASE DIR: " + baseDir + "%n";
     throw new RuntimeException(c);
   }
 
