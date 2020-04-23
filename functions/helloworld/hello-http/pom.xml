@@ -97,14 +97,6 @@
       <version>1.4.0</version>
       <scope>test</scope>
     </dependency>
-
-    <!-- Pre-install the Functions Framework plugin -->
-    <dependency>
-      <groupId>com.google.cloud.functions</groupId>
-      <artifactId>function-maven-plugin</artifactId>
-      <version>0.9.2</version>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
 
   <!-- Disable tests during GCF builds (from parent POM) -->
@@ -157,7 +149,6 @@
           <skipTests>${skipTests}</skipTests>
           <reportNameSuffix>sponge_log</reportNameSuffix>
           <trimStackTrace>false</trimStackTrace>
-          <workingDirectory>${project.build.directory}</workingDirectory>
         </configuration>
       </plugin>
       <plugin> <!-- Required for Java 8 (Alpha) functions in the inline editor -->
