@@ -166,17 +166,20 @@ for file in **/pom.xml; do
     fi
 
     # Run an install-only Maven job if the kokoro.preinstallMavenDependencies property is true in pom.xml
-    SKIP_TESTS=$(mvn -q -DforceStdout help:evaluate -Dexpression=kokoro.preinstallMavenDependencies | grep -i true)
+    RUN_INSTALL=$(mvn -q -DforceStdout help:evaluate -Dexpression=kokoro.preinstallMavenDependencies | grep -i true)
     if [[ $? -eq 0 ]]; then
         echo -e "\n Preinstalling Maven dependencies...\n"
-        mvn -q -batch-mode --fail-never clean verify \
+        mvn -q -batch-mode --fail-never clean install \
           -DskipTests \
           -Dfindbugs.skip=true
         echo -e "\n Maven preinstall complete!\n"
+    else
+      # Run "mvn clean" for the "verify" step below
+      mvn -q --batch-mode clean
     fi
 
     # Use maven to execute the tests for the project.
-    mvn -P lint -q --batch-mode --fail-at-end clean verify \
+    mvn -P lint -q --batch-mode --fail-at-end verify \
        -Dfile.encoding="UTF-8" \
        -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
        -Dmaven.test.redirectTestOutputToFile=true \
