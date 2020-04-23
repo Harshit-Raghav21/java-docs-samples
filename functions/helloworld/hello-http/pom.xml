@@ -99,16 +99,11 @@
     </dependency>
 
     <!-- Pre-install the Functions Framework plugin -->
-    <!--
-      MUST be downloaded outside the "test" scope to avoid having
-      the Functions Framework invocation in ExampleIntegrationTest
-      [re]downloading its dependencies.
-    -->
     <dependency>
       <groupId>com.google.cloud.functions</groupId>
       <artifactId>function-maven-plugin</artifactId>
       <version>0.9.2</version>
-      <!-- <scope>test</scope> -->
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
