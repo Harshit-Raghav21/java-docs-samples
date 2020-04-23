@@ -65,26 +65,8 @@ public class ExampleIntegrationTest {
 
   @AfterClass
   public static void tearDown() throws IOException {
-    // DEBUG: Print stdout/stderr
-    Logger.getAnonymousLogger().severe("--- OUT ---");
-    ByteArrayOutputStream a = new ByteArrayOutputStream();
-    a.write(
-        emulatorProcess.getErrorStream().readNBytes(emulatorProcess.getErrorStream().available()));
-
-    // DEBUG: Print stdout/stderr
-    Logger.getAnonymousLogger().severe("--- ERR ---");
-    ByteArrayOutputStream b = new ByteArrayOutputStream();
-    b.write(
-        emulatorProcess.getInputStream().readNBytes(emulatorProcess.getInputStream().available()));
-    String c = a.toString(StandardCharsets.UTF_8) + b.toString(StandardCharsets.UTF_8);
-
     // Terminate the running Functions Framework Maven plugin process
     emulatorProcess.destroy();
-
-    // DEBUG
-    String baseDir = System.getProperty("basedir");
-    c += "%nBASE DIR: " + baseDir + "%n";
-    throw new RuntimeException(c);
   }
 
   @Test
