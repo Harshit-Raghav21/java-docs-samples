@@ -54,9 +54,9 @@ public class ExampleIntegrationTest {
   @BeforeClass
   public static void setUp() throws IOException {
     // Get the sample's base directory (the one containing a pom.xml file)
-    String baseDir = System.getProperty("user.dir");
+    String baseDir = System.getProperty("baseDir");
     if (baseDir == null) {
-      baseDir = System.getProperty("baseDir");
+      baseDir = System.getProperty("user.dir");
     }
 
     // Emulate the function locally by running the Functions Framework Maven plugin
