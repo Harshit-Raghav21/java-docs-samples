@@ -58,7 +58,7 @@ public class ExampleIntegrationTest {
 
     // Emulate the function locally by running the Functions Framework Maven plugin
     emulatorProcess = new ProcessBuilder()
-        .command("mvn", "function:run")
+        .command("mvn", "-nsu", "function:run")
         .directory(new File(baseDir))
         .start();
   }
