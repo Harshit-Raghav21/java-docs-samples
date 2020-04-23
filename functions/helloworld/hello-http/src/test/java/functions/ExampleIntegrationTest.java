@@ -49,7 +49,7 @@ public class ExampleIntegrationTest {
   @BeforeClass
   public static void setUp() throws IOException {
     // Get the sample's base directory (the one containing a pom.xml file)
-    String baseDir = "/Users/anassri/Desktop/java-docs-samples/functions/helloworld/hello-http"; //System.getProperty("basedir");
+    String baseDir = System.getProperty("basedir");
 
     // Emulate the function locally by running the Functions Framework Maven plugin
     emulatorProcess = new ProcessBuilder()
