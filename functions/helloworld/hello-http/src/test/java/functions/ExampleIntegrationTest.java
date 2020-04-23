@@ -24,9 +24,6 @@ import io.github.resilience4j.core.IntervalFunction;
 import io.github.resilience4j.retry.Retry;
 import io.github.resilience4j.retry.RetryConfig;
 import io.github.resilience4j.retry.RetryRegistry;
-import io.vavr.CheckedFunction0;
-import io.vavr.control.Try;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -34,8 +31,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
-import java.util.logging.Logger;
-import javassist.bytecode.ByteArray;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -85,11 +80,10 @@ public class ExampleIntegrationTest {
     Retry retry = registry.retry("my");
 
     // Perform the request-retry process
-    CheckedFunction0<String> retriableFunc = Retry.decorateCheckedSupplier(retry, () -> {
+    String body = Retry.decorateCheckedSupplier(retry, () -> {
       return client.send(getRequest,
           HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8)).body();
-    });
-    String body = Try.of(retriableFunc).get();
+    }).apply();
 
     // Verify the function returned the right results
     assertThat(body).isEqualTo("Hello world!");
