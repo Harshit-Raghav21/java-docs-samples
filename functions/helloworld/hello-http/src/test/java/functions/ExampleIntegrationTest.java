@@ -49,7 +49,7 @@ public class ExampleIntegrationTest {
   @BeforeClass
   public static void setUp() throws IOException {
     // Get the sample's base directory (the one containing a pom.xml file)
-    String baseDir = System.getProperty("basedir");
+    String baseDir = "/Users/anassri/Desktop/java-docs-samples/functions/helloworld/hello-http"; //System.getProperty("basedir");
 
     // Emulate the function locally by running the Functions Framework Maven plugin
     emulatorProcess = new ProcessBuilder()
@@ -80,10 +80,10 @@ public class ExampleIntegrationTest {
     Retry retry = registry.retry("my");
 
     // Perform the request-retry process
-    String body = Retry.decorateCheckedSupplier(retry, () -> {
-      return client.send(getRequest,
-          HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8)).body();
-    }).apply();
+    String body = Retry.decorateCheckedSupplier(retry, () -> client.send(
+        getRequest,
+        HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8)).body()
+    ).apply();
 
     // Verify the function returned the right results
     assertThat(body).isEqualTo("Hello world!");
